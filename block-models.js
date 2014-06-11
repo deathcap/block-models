@@ -74,6 +74,21 @@ var element2sc = function(element) {
   return {positions: positions, cells: cells};
 };
 
+// convert an array of multiple cuboid elements
+var elements2sc = function(elements) {
+  var sc = {positions: [], cells: []};
+
+  for (var i = 0; i < elements.length; i += 1) {
+    var element = elements[i];
+    var thisSC = element2sc(element);
+
+    sc.positions = sc.positions.concat(thisSC.positions);
+    sc.cells = sc.cells.concat(thisSC.cells);
+  }
+
+  return sc;
+};
+
 module.exports = function() {
   /*
   var from = [0,0,0];
@@ -92,8 +107,9 @@ module.exports = function() {
   return {positions: positions, cells: cells};
     */
 
-  return element2sc({
-    from: [0,0,0],
+  return elements2sc(
+   [
+    {from: [0,0,0],
     to: [16,16,16],
     faces: {
       down: {},
@@ -101,7 +117,8 @@ module.exports = function() {
       north: {},
       south: {},
       west: {},
-      east: {}
+      east: {}},
     }
-  });
+  ]
+  );
 };
