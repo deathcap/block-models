@@ -39,7 +39,43 @@ var planeCells = function(normal) {
   }[normal.join(',')];
 };
 
+var compassDirection2Normal = function(dir) {
+  return {
+    north: [1,0,0],
+    south: [-1,0,0],
+    up: [0,1,0],
+    down: [0,-1,0],
+    east: [0,0,1],
+    west: [0,0,-1]
+  }[dir];
+};
+
+// convert one JSON element to simplical complex positions and cells
+var element2sc = function(element) {
+  var from = element.from;
+  var to = element.to;
+
+  var positions = cubePositions(from, to);
+  var cells = [];
+
+  // add cells for each cube face (plane) in this element
+  for (var direction in element.faces) {
+    var faceInfo = element.faces[direction];
+
+    var normal = compassDirection2Normal(direction);
+    if (!normal) throw new Error('invalid compass direction: '+direction);
+
+    var theseCells = planeCells(normal);
+    if (!theseCells) throw new Error('invalid normal: '+normal);
+
+    cells = cells.concat(theseCells);
+  }
+
+  return {positions: positions, cells: cells};
+};
+
 module.exports = function() {
+  /*
   var from = [0,0,0];
   var to = [16,16,16];
 
@@ -54,4 +90,18 @@ module.exports = function() {
     .concat(planeCells([0,0,1]));
 
   return {positions: positions, cells: cells};
+    */
+
+  return element2sc({
+    from: [0,0,0],
+    to: [16,16,16],
+    faces: {
+      down: {},
+      up: {},
+      north: {},
+      south: {},
+      west: {},
+      east: {}
+    }
+  });
 };
