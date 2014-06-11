@@ -29,7 +29,7 @@ var scPos = require('./')(
 var scNor = normals.vertexNormals(bunny.cells, bunny.positions)
 createExample(scPos, scNor)
 
-function createExample(pos, norm, cells) {
+function createExample(pos, norm) {
   var canvas     = document.body.appendChild(document.createElement('canvas'))
   var gl         = createContext(canvas, render)
   var camera     = createCamera(canvas)
@@ -74,8 +74,6 @@ void main() {\
   var geom = createGeom(gl)
     .attr('position', pos)
     .attr('normal', norm)
-
-  if (cells) geom.faces(cells)
 
   var modelMatrix = mat4.create()
   var s = 1/3
