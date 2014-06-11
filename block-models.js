@@ -42,6 +42,7 @@ var planeCells = function(normal) {
   }[normal.join(',')];
 };
 
+// cardinal compass direction to normal vector
 var compassDirection2Normal = function(dir) {
   return {
     north: [1,0,0],
@@ -53,10 +54,15 @@ var compassDirection2Normal = function(dir) {
   }[dir];
 };
 
+// "pixelspace" is 16 units per voxel (note: can be fractional)
+var fromPixelspace = function(v) {
+  return v / 16;
+};
+
 // convert one JSON element to simplical complex positions and cells
 var element2sc = function(element) {
-  var from = element.from;
-  var to = element.to;
+  var from = element.from.map(fromPixelspace);
+  var to = element.to.map(fromPixelspace);
 
   var positions = cubePositions(from, to);
   var cells = [];

@@ -68,7 +68,7 @@ void main() {\
   var geom = createBlockGeometry(gl, data)
 
   var modelMatrix = mat4.create()
-  var s = 1/3
+  var s = 5
   mat4.scale(modelMatrix, modelMatrix, [s,s,s])
 
   function render() {
