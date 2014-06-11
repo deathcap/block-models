@@ -23,11 +23,21 @@ var cubePositions = function(a, b) {
 // a---d
 // | \ |
 // b---c
-var trianglesQuadCells = function(a,b,c,d) {
+var trianglesQuad = function(a,b,c,d) {
   return [[a,b,c], [a,c,d]];
 }
 
-//var planeCells = function(
+// get plane cells for given normal vector
+var planeCells = function(normal) {
+  return {
+    '0,0,-1': trianglesQuad(5,4,0,1),
+    '0,0,1':  trianglesQuad(2,6,7,3),
+    '0,-1,0': trianglesQuad(0,2,3,1),
+    '0,1,0':  trianglesQuad(5,4,6,7),
+    '-1,0,0': trianglesQuad(1,5,7,3),
+    '1,0,0':  trianglesQuad(0,4,6,2),
+  }[normal.join(',')];
+};
 
 module.exports = function() {
   var from = [0,0,0];
@@ -35,7 +45,8 @@ module.exports = function() {
 
   var positions = cubePositions(from, to);
 
-  var cells = trianglesQuadCells(0,4,6,2);
+  //var cells = trianglesQuadCells(1,5,7,3).concat(trianglesQuadCells(0,4,6,2));
+  var cells = planeCells([-1,0,0]).concat(planeCells([1,0,0]));
 
   return {positions: positions, cells: cells};
 };
