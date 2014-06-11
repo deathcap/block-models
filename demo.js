@@ -16,7 +16,7 @@ var scPos = require('./')(
    [
     {from: [0,0,0],
     to: [16,16,16],
-    faces: {
+    faceData: {
       down: {},
       up: {},
       north: {},

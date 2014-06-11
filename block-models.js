@@ -59,8 +59,8 @@ var element2sc = function(element) {
   var cells = [];
 
   // add cells for each cube face (plane) in this element
-  for (var direction in element.faces) {
-    var faceInfo = element.faces[direction];
+  for (var direction in element.faceData) {
+    var faceInfo = element.faceData[direction];
 
     var normal = compassDirection2Normal(direction);
     if (!normal) throw new Error('invalid compass direction: '+direction);
