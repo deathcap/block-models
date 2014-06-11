@@ -4,16 +4,13 @@
 var createCamera  = require('canvas-orbit-camera')
 var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
-var normals       = require('normals')
 var glslify       = require('glslify')
-var bunny         = require('bunny')
 
-var createGeom    = require('gl-geometry')
+var createBlockGeometry = require('./')
 
-// handles simplicial complexes with cells/positions properties
-var scPos = require('./')(
+showExample(
    // example parsed JSON
-   [
+  [
     {from: [0,0,0],
     to: [16,16,16],
     faceData: {
@@ -24,12 +21,9 @@ var scPos = require('./')(
       west: {},
       east: {}},
     }
-  ]);
+  ])
 
-var scNor = normals.vertexNormals(bunny.cells, bunny.positions)
-createExample(scPos, scNor)
-
-function createExample(pos, norm) {
+function showExample(data) {
   var canvas     = document.body.appendChild(document.createElement('canvas'))
   var gl         = createContext(canvas, render)
   var camera     = createCamera(canvas)
@@ -71,9 +65,7 @@ void main() {\
   canvas.style.margin = '1em'
   canvas.style.border = '1px solid black'
 
-  var geom = createGeom(gl)
-    .attr('position', pos)
-    .attr('normal', norm)
+  var geom = createBlockGeometry(gl, data)
 
   var modelMatrix = mat4.create()
   var s = 1/3

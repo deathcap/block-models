@@ -11,6 +11,7 @@
     "voxel"
   ],
   "dependencies": {
+    "normals": "^0.1.0",
     "gl-geometry": "0.0.0",
     "glslify": "^1.4.0"
   },
@@ -18,9 +19,7 @@
   "devDependencies": {
     "canvas-orbit-camera": "0.0.0",
     "gl-matrix": "^2.2.1",
-    "gl-context": "^0.1.0",
-    "normals": "^0.1.0",
-    "bunny": "^1.0.1"
+    "gl-context": "^0.1.0"
   },
   "scripts": {
     "start": "beefy demo.js -- -t glslify"

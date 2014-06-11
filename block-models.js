@@ -1,5 +1,8 @@
 'use strict';
 
+var createGeometry = require('gl-geometry');
+var normals = require('normals');
+
 // get all coordinates for a cube ranging from vertex a to b
 //   ____
 //  /   /|
@@ -89,5 +92,16 @@ var elements2sc = function(elements) {
   return sc;
 };
 
-module.exports = elements2sc;
+var createBlockGeometry = function(gl, elements) {
+  var scPos = elements2sc(elements);
+  var scNor = normals.vertexNormals(scPos.cells, scPos.positions);
+
+  var geometry = createGeometry(gl)
+    .attr('position', scPos)
+    .attr('normal', scNor);
+
+  return geometry;
+};
+
+module.exports = createBlockGeometry;
 
