@@ -1,6 +1,6 @@
 'use strict';
 
-// get coordinates for a cube ranging from vertex a to b
+// get all coordinates for a cube ranging from vertex a to b
 //   ____
 //  /   /|
 // a---+ |
@@ -19,15 +19,23 @@ var cubePositions = function(a, b) {
   ];
 };
 
+// get cells for two triangles covering a quad
+// a---d
+// | \ |
+// b---c
+var trianglesQuadCells = function(a,b,c,d) {
+  return [[a,b,c], [a,c,d]];
+}
+
+//var planeCells = function(
+
 module.exports = function() {
   var from = [0,0,0];
   var to = [16,16,16];
 
   var positions = cubePositions(from, to);
 
-  var cells = [
-    [0,1,7],
-  ];
+  var cells = trianglesQuadCells(0,4,6,2);
 
   return {positions: positions, cells: cells};
 };
