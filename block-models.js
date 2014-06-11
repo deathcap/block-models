@@ -89,36 +89,5 @@ var elements2sc = function(elements) {
   return sc;
 };
 
-module.exports = function() {
-  /*
-  var from = [0,0,0];
-  var to = [16,16,16];
+module.exports = elements2sc;
 
-  var positions = cubePositions(from, to);
-
-  var cells =
-            planeCells([-1,0,0])
-    .concat(planeCells([1,0,0]))
-    .concat(planeCells([0,1,0]))
-    .concat(planeCells([0,-1,0]))
-    .concat(planeCells([0,0,-1]))
-    .concat(planeCells([0,0,1]));
-
-  return {positions: positions, cells: cells};
-    */
-
-  return elements2sc(
-   [
-    {from: [0,0,0],
-    to: [16,16,16],
-    faces: {
-      down: {},
-      up: {},
-      north: {},
-      south: {},
-      west: {},
-      east: {}},
-    }
-  ]
-  );
-};

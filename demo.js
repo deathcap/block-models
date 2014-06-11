@@ -11,7 +11,21 @@ var bunny         = require('bunny')
 var createGeom    = require('gl-geometry')
 
 // handles simplicial complexes with cells/positions properties
-var scPos = require('./')()
+var scPos = require('./')(
+   // example parsed JSON
+   [
+    {from: [0,0,0],
+    to: [16,16,16],
+    faces: {
+      down: {},
+      up: {},
+      north: {},
+      south: {},
+      west: {},
+      east: {}},
+    }
+  ]);
+
 var scNor = normals.vertexNormals(bunny.cells, bunny.positions)
 createExample(scPos, scNor)
 
