@@ -1,6 +1,7 @@
 {
   "name": "block-models",
   "description": "",
+  "main": "block-models.js",
   "version": "0.0.1",
   "repository": {
     "type": "git",
@@ -10,6 +11,18 @@
     "voxel"
   ],
   "dependencies": {
+    "gl-geometry": "0.0.0",
+    "glslify": "^1.4.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "canvas-orbit-camera": "0.0.0",
+    "gl-matrix": "^2.2.1",
+    "gl-context": "^0.1.0",
+    "normals": "^0.1.0",
+    "bunny": "^1.0.1"
+  },
+  "scripts": {
+    "test": "beefy demo.js -- -t glslify"
+  }
 }
