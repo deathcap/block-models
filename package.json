@@ -23,6 +23,6 @@
     "bunny": "^1.0.1"
   },
   "scripts": {
-    "test": "beefy demo.js -- -t glslify"
+    "start": "beefy demo.js -- -t glslify"
   }
 }
