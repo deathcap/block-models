@@ -49,8 +49,8 @@ window.setInterval(function() {
   oldText = text
 
   var data = JSON.parse(text)
-  geom = createBlockMesh(gl, data)
-  console.log('updated geometry',geom)
+  mesh = createBlockMesh(gl, data)
+  console.log('updated geometry',mesh)
 }, 200)
 
 var modelMatrix = mat4.create()
