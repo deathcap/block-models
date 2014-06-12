@@ -105,11 +105,17 @@ var createBlockGeometry = function(gl, elements) {
 
   console.log(vertices);
   console.log(JSON.stringify(vertices));
-  return
-  debugger
+
+  // gl-geometry accepts an array-of-arrays, e.g. [[0, 0, 0], [1, 0, 0], [1, 1, 0]]
+  // but not an array-of-array-of-arrays
+  var flat = [];
+  for (var i = 0; i < vertices.length; i += 1) {
+    var triangle = vertices[i];
+    flat = flat.concat(triangle);
+  }
 
   var geometry = createGeometry(gl)
-    .attr('position', scPos)
+    .attr('position', flat)
 
   return geometry;
 };
