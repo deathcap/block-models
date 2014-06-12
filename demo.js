@@ -73,16 +73,15 @@ document.body.appendChild(textarea)
 
 var geom = createBlockGeometry(gl, exampleData)
 
-document.body.addEventListener('keydown', function() {
-  process.nextTick(function() {
-    var text = textarea.value
-    if (text.length === oldText.length && text === oldText.length) return // no change
+window.setInterval(function() {
+  var text = textarea.value
+  if (text.length === oldText.length && text === oldText) return // no change
+  oldText = text
 
-    var data = JSON.parse(text)
-    geom = createBlockGeometry(gl, data)
-    console.log('updated geometry',geom)
-  })
-})
+  var data = JSON.parse(text)
+  geom = createBlockGeometry(gl, data)
+  console.log('updated geometry',geom)
+}, 200)
 
 var modelMatrix = mat4.create()
 var s = 5
