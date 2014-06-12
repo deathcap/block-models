@@ -1,6 +1,8 @@
 'use strict';
 
 var createGeometry = require('gl-geometry');
+var createBuffer = require('gl-buffer');
+var createVAO = require('gl-vao');
 
 // get all coordinates for a cube ranging from vertex a to b
 //   ____
@@ -62,15 +64,17 @@ var fromPixelspace = function(v) {
 };
 
 // convert one JSON element to its vertices
-var element2vertices = function(element) {
+var element2vertices = function(element, getTextureUV) {
   var from = element.from.map(fromPixelspace);
   var to = element.to.map(fromPixelspace);
 
   var positions = cubePositions(from, to);
   var vertices = [];
+  var uvArray = [];
 
   // add cells for each cube face (plane) in this element
   for (var direction in element.faceData) {
+    // position
     var faceInfo = element.faceData[direction];
 
     var normal = compassDirection2Normal(direction);
@@ -80,45 +84,77 @@ var element2vertices = function(element) {
     if (!theseVertices) throw new Error('invalid normal: '+normal);
 
     vertices = vertices.concat(theseVertices);
-  }
-  // TODO: uv
 
-  return vertices;
+    // TODO
+    // texturing (textures loaded from voxel-stitch updateTexture event)
+    var tileUV = getTextureUV ? getTextureUV(info[i].texture) : [ [0,0], [0,1], [1,1], [1,0] ]; // TODO
+    if (!tileUV) throw new Error('failed to load decal texture: ' + info[i].texture + ' for ' + info[i]);
+
+    // cover the texture tile over the two triangles forming a flat plane
+    var planeUV = [
+      tileUV[3],
+      tileUV[0],
+      tileUV[1],
+
+      tileUV[2],
+    ];
+
+    // rotate UVs so texture is always facing up
+    var r = 0;
+    if (normal[0] === -1 || 
+        normal[1] === -1 ||
+        normal[2] === 1) { // TODO: -1?
+      r = 3;
+    }
+
+    uvArray.push(planeUV[(0 + r) % 4][0]); uvArray.push(planeUV[(0 + r) % 4][1]);
+    uvArray.push(planeUV[(1 + r) % 4][0]); uvArray.push(planeUV[(1 + r) % 4][1]);
+    uvArray.push(planeUV[(2 + r) % 4][0]); uvArray.push(planeUV[(2 + r) % 4][1]);
+
+    uvArray.push(planeUV[(0 + r) % 4][0]); uvArray.push(planeUV[(0 + r) % 4][1]);
+    uvArray.push(planeUV[(2 + r) % 4][0]); uvArray.push(planeUV[(2 + r) % 4][1]);
+    uvArray.push(planeUV[(3 + r) % 4][0]); uvArray.push(planeUV[(3 + r) % 4][1]);
+
+  }
+
+  return {vertices:vertices, uv:uvArray};
 };
 
 // convert an array of multiple cuboid elements
 var elements2vertices = function(elements) {
-  var vertices = [];
+  var result = {vertices:[], uv:[]};
 
   for (var i = 0; i < elements.length; i += 1) {
     var element = elements[i];
-    var theseVertices = element2vertices(element);
+    var thisResult = element2vertices(element);
 
-    vertices = vertices.concat(theseVertices);
+    result.vertices = result.vertices.concat(thisResult.vertices);
+    result.uv = result.uv.concat(thisResult.uv);
   }
 
-  return vertices;
+  return result;
 };
 
-var createBlockGeometry = function(gl, elements) {
-  var vertices = elements2vertices(elements);
+// create a mesh ready for rendering
+var createBlockMesh = function(gl, elements) {
+  var result = elements2vertices(elements);
 
-  console.log(vertices);
-  console.log(JSON.stringify(vertices));
+  var verticesBuf = createBuffer(gl, new Float32Array(result.vertices));
+  var uvBuf = createBuffer(gl, new Float32Array(result.uv));
 
-  // gl-geometry accepts an array-of-arrays, e.g. [[0, 0, 0], [1, 0, 0], [1, 1, 0]]
-  // but not an array-of-array-of-arrays
-  var flat = [];
-  for (var i = 0; i < vertices.length; i += 1) {
-    var triangle = vertices[i];
-    flat = flat.concat(triangle);
-  }
+  var mesh = createVAO(gl, [
+      { buffer: verticesBuf,
+        size: 3
+      },
+      {
+        buffer: uvBuf,
+        size: 2
+      }
+      ]);
+  mesh.length = result.vertices.length/3;
 
-  var geometry = createGeometry(gl)
-    .attr('position', flat)
-
-  return geometry;
+  return mesh;
 };
 
-module.exports = createBlockGeometry;
+module.exports = createBlockMesh;
 
