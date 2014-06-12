@@ -25,19 +25,22 @@ var cubePositions = function(a, b) {
 // a---d
 // | \ |
 // b---c
-var trianglesQuad = function(a,b,c,d) {
-  return [[a,b,c], [a,c,d]];
+// cp = cubePositions
+var trianglesQuad = function(cp,a,b,c,d) {
+  return [
+    [cp[a],cp[b],cp[c]],
+    [cp[a],cp[c],cp[d]]];
 }
 
-// get plane cells for given normal vector
-var planeCells = function(normal) {
+// get plane triangle vertices for given normal vector
+var planeVertices = function(cp,normal) {
   return {
-    '0,0,-1': trianglesQuad(1,0,4,5),
-    '0,0,1':  trianglesQuad(3,7,6,2),
-    '0,-1,0': trianglesQuad(1,3,2,0),
-    '0,1,0':  trianglesQuad(5,4,6,7),
-    '-1,0,0': trianglesQuad(1,5,7,3),
-    '1,0,0':  trianglesQuad(2,6,4,0),
+    '0,0,-1': trianglesQuad(cp,1,0,4,5),
+    '0,0,1':  trianglesQuad(cp,3,7,6,2),
+    '0,-1,0': trianglesQuad(cp,1,3,2,0),
+    '0,1,0':  trianglesQuad(cp,5,4,6,7),
+    '-1,0,0': trianglesQuad(cp,1,5,7,3),
+    '1,0,0':  trianglesQuad(cp,2,6,4,0),
   }[normal.join(',')];
 };
 
@@ -58,13 +61,13 @@ var fromPixelspace = function(v) {
   return v / 16;
 };
 
-// convert one JSON element to simplical complex positions and cells
-var element2sc = function(element) {
+// convert one JSON element to its vertices
+var element2vertices = function(element) {
   var from = element.from.map(fromPixelspace);
   var to = element.to.map(fromPixelspace);
 
   var positions = cubePositions(from, to);
-  var cells = [];
+  var vertices = [];
 
   // add cells for each cube face (plane) in this element
   for (var direction in element.faceData) {
@@ -73,32 +76,37 @@ var element2sc = function(element) {
     var normal = compassDirection2Normal(direction);
     if (!normal) throw new Error('invalid compass direction: '+direction);
 
-    var theseCells = planeCells(normal);
-    if (!theseCells) throw new Error('invalid normal: '+normal);
+    var theseVertices = planeVertices(positions, normal);
+    if (!theseVertices) throw new Error('invalid normal: '+normal);
 
-    cells = cells.concat(theseCells);
+    vertices = vertices.concat(theseVertices);
   }
+  // TODO: uv
 
-  return {positions: positions, cells: cells};
+  return vertices;
 };
 
 // convert an array of multiple cuboid elements
-var elements2sc = function(elements) {
-  var sc = {positions: [], cells: []};
+var elements2vertices = function(elements) {
+  var vertices = [];
 
   for (var i = 0; i < elements.length; i += 1) {
     var element = elements[i];
-    var thisSC = element2sc(element);
+    var theseVertices = element2vertices(element);
 
-    sc.positions = sc.positions.concat(thisSC.positions);
-    sc.cells = sc.cells.concat(thisSC.cells);
+    vertices = vertices.concat(theseVertices);
   }
 
-  return sc;
+  return vertices;
 };
 
 var createBlockGeometry = function(gl, elements) {
-  var scPos = elements2sc(elements);
+  var vertices = elements2vertices(elements);
+
+  console.log(vertices);
+  console.log(JSON.stringify(vertices));
+  return
+  debugger
 
   var geometry = createGeometry(gl)
     .attr('position', scPos)
