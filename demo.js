@@ -5,8 +5,10 @@ var createCamera  = require('canvas-orbit-camera')
 var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
 var glslify       = require('glslify')
+var createTexture = require('gl-texture2d')
 
 var createBlockMesh = require('./')
+
 
 var canvas     = document.body.appendChild(document.createElement('canvas'))
 var gl         = createContext(canvas, render)
@@ -63,7 +65,7 @@ window.setInterval(function() {
 }, 200)
 
 var modelMatrix = mat4.create()
-var s = 2
+var s = 5
 mat4.scale(modelMatrix, modelMatrix, [s,s,s])
 
 var shader = glslify({ // TODO: move into main?
@@ -92,6 +94,8 @@ void main() {\
   gl_FragColor = texture2D(texture, vUv);\
 }"})(gl);
 
+var texture = createTexture(gl, require('lena'))
+
 function render() {
   var width  = canvas.width
   var height = canvas.height
@@ -111,7 +115,8 @@ function render() {
     , 0.001
     , 10000
   )
-  // use same atlas from voxel-shader TODO: can we reliably avoid binding? if already bound, seems to reuse
+  if (texture) shader.uniforms.texture = texture.bind()
+  // TODO: use same atlas from voxel-shader TODO: can we reliably avoid binding? if already bound, seems to reuse
   //if (this.stitchPlugin.texture) this.shader.uniforms.texture = this.stitchPlugin.texture.bind();
 
   mesh.bind();

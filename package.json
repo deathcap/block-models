@@ -20,7 +20,9 @@
   "devDependencies": {
     "canvas-orbit-camera": "0.0.0",
     "gl-matrix": "^2.2.1",
-    "gl-context": "^0.1.0"
+    "gl-context": "^0.1.0",
+    "gl-texture2d": "^1.0.1",
+    "lena": "^1.0.0"
   },
   "scripts": {
     "start": "beefy demo.js -- -t glslify"
