@@ -7,7 +7,6 @@ var createContext = require('gl-context')
 var glslify       = require('glslify')
 
 var createBlockMesh = require('./')
-var planeUtils = require('./gl-plane.js')
 
 var canvas     = document.body.appendChild(document.createElement('canvas'))
 var gl         = createContext(canvas, render)
@@ -67,19 +66,31 @@ var modelMatrix = mat4.create()
 var s = 2
 mat4.scale(modelMatrix, modelMatrix, [s,s,s])
 
-var shader = planeUtils.createPlaneShader(gl)
-  /*
-var mesh = planeUtils.createPlaneMesh(gl,
-    // TODO: replace with createBlockGeometry
-  [
-    {position:[0,0,0], normal:[-1,0,0], texture:'furnace_top'},
-    {position:[0,1,0], normal:[+1,0,0], texture:'furnace_top'},
-    {position:[0,2,0], normal:[0,+1,0], texture:'furnace_top'},
-    {position:[0,3,0], normal:[0,-1,0], texture:'furnace_top'},
-    {position:[0,4,0], normal:[0,0,+1], texture:'furnace_front_on'},
-    {position:[0,5,0], normal:[0,0,-1], texture:'furnace_top'},
-  ])
-  */
+var shader = glslify({ // TODO: move into main?
+    inline: true,
+    vertex: "\
+attribute vec3 position;\
+attribute vec2 uv;\
+\
+uniform mat4 projection;\
+uniform mat4 view;\
+uniform mat4 model;\
+varying vec2 vUv;\
+\
+void main() {\
+  gl_Position = projection * view * model * vec4(position, 1.0);\
+  vUv = uv;\
+}",
+
+  fragment: "\
+precision highp float;\
+\
+uniform sampler2D texture;\
+varying vec2 vUv;\
+\
+void main() {\
+  gl_FragColor = texture2D(texture, vUv);\
+}"})(gl);
 
 function render() {
   var width  = canvas.width
