@@ -41,6 +41,10 @@ var exampleData =
 var oldText = textarea.value = JSON.stringify(exampleData, null, '  ')
 document.body.appendChild(textarea)
 
+document.body.appendChild(document.createElement('br'))
+var errorNode = document.createTextNode('')
+document.body.appendChild(errorNode)
+
 var mesh = createBlockMesh(gl, exampleData)
 
 window.setInterval(function() {
@@ -48,9 +52,15 @@ window.setInterval(function() {
   if (text.length === oldText.length && text === oldText) return // no change
   oldText = text
 
-  var data = JSON.parse(text)
-  mesh = createBlockMesh(gl, data)
-  console.log('updated geometry',mesh)
+  errorNode.textContent = ''
+  try {
+    var data = JSON.parse(text)
+    mesh = createBlockMesh(gl, data)
+    console.log('updated geometry',mesh)
+  } catch (e) {
+    errorNode.textContent = e.toString()
+  }
+
 }, 200)
 
 var modelMatrix = mat4.create()
