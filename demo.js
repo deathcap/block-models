@@ -18,14 +18,11 @@ var shader     = glslify({
 precision mediump float;\
 \
 attribute vec3 position;\
-attribute vec3 normal;\
-varying vec3 vnormal;\
 uniform mat4 uProjection;\
 uniform mat4 uView;\
 uniform mat4 uModel;\
 \
 void main() {\
-vnormal = (uView * vec4(normal, 1.0)).xyz / 2.0 + 0.5;\
 \
 gl_Position = (\
     uProjection\
@@ -37,10 +34,8 @@ gl_Position = (\
   , frag: '\
 precision mediump float;\
 \
-varying vec3 vnormal;\
-\
 void main() {\
-gl_FragColor = vec4(vnormal, 1.0);\
+gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\
 }'
 })(gl)
 
