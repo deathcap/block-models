@@ -6,7 +6,7 @@ var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
 var glslify       = require('glslify')
 
-var createBlockGeometry = require('./')
+var createBlockMesh = require('./')
 var planeUtils = require('./gl-plane.js')
 
 var canvas     = document.body.appendChild(document.createElement('canvas'))
@@ -41,7 +41,7 @@ var exampleData =
 var oldText = textarea.value = JSON.stringify(exampleData, null, '  ')
 document.body.appendChild(textarea)
 
-var geom = createBlockGeometry(gl, exampleData)
+var mesh = createBlockMesh(gl, exampleData)
 
 window.setInterval(function() {
   var text = textarea.value
@@ -49,7 +49,7 @@ window.setInterval(function() {
   oldText = text
 
   var data = JSON.parse(text)
-  geom = createBlockGeometry(gl, data)
+  geom = createBlockMesh(gl, data)
   console.log('updated geometry',geom)
 }, 200)
 
@@ -58,6 +58,7 @@ var s = 2
 mat4.scale(modelMatrix, modelMatrix, [s,s,s])
 
 var shader = planeUtils.createPlaneShader(gl)
+  /*
 var mesh = planeUtils.createPlaneMesh(gl,
     // TODO: replace with createBlockGeometry
   [
@@ -68,6 +69,7 @@ var mesh = planeUtils.createPlaneMesh(gl,
     {position:[0,4,0], normal:[0,0,+1], texture:'furnace_front_on'},
     {position:[0,5,0], normal:[0,0,-1], texture:'furnace_top'},
   ])
+  */
 
 function render() {
   var width  = canvas.width

@@ -29,21 +29,25 @@ var cubePositions = function(a, b) {
 // b---c
 // cp = cubePositions
 var trianglesQuad = function(cp,a,b,c,d) {
-  return [
-    [cp[a],cp[b],cp[c]],
-    [cp[a],cp[c],cp[d]]];
+  var ret =
+            cp[a] .concat(cp[b]).concat(cp[c])
+    .concat(cp[a]).concat(cp[c]).concat(cp[d]);
+
+  return ret;
 }
 
 // get plane triangle vertices for given normal vector
 var planeVertices = function(cp,normal) {
-  return {
+  var planes = {
     '0,0,-1': trianglesQuad(cp,1,0,4,5),
     '0,0,1':  trianglesQuad(cp,3,7,6,2),
     '0,-1,0': trianglesQuad(cp,1,3,2,0),
     '0,1,0':  trianglesQuad(cp,5,4,6,7),
     '-1,0,0': trianglesQuad(cp,1,5,7,3),
     '1,0,0':  trianglesQuad(cp,2,6,4,0),
-  }[normal.join(',')];
+  };
+
+  return planes[normal.join(',')];
 };
 
 // cardinal compass direction to normal vector
@@ -131,6 +135,8 @@ var elements2vertices = function(elements) {
     result.vertices = result.vertices.concat(thisResult.vertices);
     result.uv = result.uv.concat(thisResult.uv);
   }
+
+  console.log('vertex count:',result.vertices.length);
 
   return result;
 };
