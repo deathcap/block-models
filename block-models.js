@@ -91,8 +91,8 @@ var element2vertices = function(element, getTextureUV) {
 
     // TODO
     // texturing (textures loaded from voxel-stitch updateTexture event)
-    var tileUV = getTextureUV ? getTextureUV(info[i].texture) : [ [0,0], [0,1], [1,1], [1,0] ]; // TODO
-    if (!tileUV) throw new Error('failed to load decal texture: ' + info[i].texture + ' for ' + info[i]);
+    var tileUV = getTextureUV ? getTextureUV(element.texture) : [ [0,0], [0,1], [1,1], [1,0] ]; // TODO
+    if (!tileUV) throw new Error('failed to lookup UV texture: ' + element.texture + ' for ' + element);
 
     // cover the texture tile over the two triangles forming a flat plane
     var planeUV = [
@@ -125,12 +125,12 @@ var element2vertices = function(element, getTextureUV) {
 };
 
 // convert an array of multiple cuboid elements
-var elements2vertices = function(elements) {
+var elements2vertices = function(elements, getTextureUV) {
   var result = {vertices:[], uv:[]};
 
   for (var i = 0; i < elements.length; i += 1) {
     var element = elements[i];
-    var thisResult = element2vertices(element);
+    var thisResult = element2vertices(element, getTextureUV);
 
     result.vertices = result.vertices.concat(thisResult.vertices);
     result.uv = result.uv.concat(thisResult.uv);
@@ -142,8 +142,8 @@ var elements2vertices = function(elements) {
 };
 
 // create a mesh ready for rendering
-var createBlockMesh = function(gl, elements) {
-  var result = elements2vertices(elements);
+var createBlockMesh = function(gl, elements, getTextureUV) {
+  var result = elements2vertices(elements, getTextureUV);
 
   var verticesBuf = createBuffer(gl, new Float32Array(result.vertices));
   var uvBuf = createBuffer(gl, new Float32Array(result.uv));
