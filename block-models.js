@@ -53,12 +53,16 @@ var planeVertices = function(cp,normal) {
 // cardinal compass direction to normal vector
 var compassDirection2Normal = function(dir) {
   return {
-    north: [1,0,0],
-    south: [-1,0,0],
-    up: [0,1,0],
-    down: [0,-1,0],
-    east: [0,0,1],
-    west: [0,0,-1]
+    // TODO: triple-check this - empirically verified, but makes
+    // little sense to me. We really ought to make this consistent everywhere.
+    north: [-1,0,0],
+    south: [1,0,0],
+
+    west: [0,1,0],
+    east: [0,-1,0],
+
+    up: [0,0,1],
+    down: [0,0,-1]
   }[dir];
 };
 
