@@ -49,7 +49,7 @@ var errorNode = document.createTextNode('')
 document.body.appendChild(errorNode)
 
 // create a mesh ready for rendering
-var createBlockMesh = function(gl, vertices, uv, getTextureUV) {
+var createBlockMesh = function(gl, vertices, uv) {
   var verticesBuf = createBuffer(gl, new Float32Array(vertices))
   var uvBuf = createBuffer(gl, new Float32Array(uv))
 
@@ -67,8 +67,8 @@ var createBlockMesh = function(gl, vertices, uv, getTextureUV) {
   return mesh
 };
 
-var model = parseBlockModel(exampleData)
-var mesh = createBlockMesh(gl, model.vertices, model.uv, undefined)
+var model = parseBlockModel(exampleData)//, undefined, 0,0,0)//1,1,1)
+var mesh = createBlockMesh(gl, model.vertices, model.uv)
 
 window.setInterval(function() {
   var text = textarea.value

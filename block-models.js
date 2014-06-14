@@ -62,15 +62,11 @@ var compassDirection2Normal = function(dir) {
   }[dir];
 };
 
-// "pixelspace" is 16 units per voxel (note: can be fractional)
-var fromPixelspace = function(v) {
-  return v / 16;
-};
-
 // convert one JSON element to its vertices
-var element2vertices = function(element, getTextureUV) {
-  var from = element.from.map(fromPixelspace);
-  var to = element.to.map(fromPixelspace);
+var element2vertices = function(element, getTextureUV, x, y, z) {
+  // convert from "pixelspace", 16 units per voxel (note: can be fractional) + add offset
+  var from = [element.from[0] / 16.0 + x, element.from[1] / 16.0 + y, element.from[2] / 16.0 + z];
+  var to =   [element.to  [0] / 16.0    , element.to  [1] / 16.0    , element.to  [2] / 16.0    ];
 
   var positions = cubePositions(from, to);
   var vertices = [];
@@ -125,12 +121,12 @@ var element2vertices = function(element, getTextureUV) {
 };
 
 // convert an array of multiple cuboid elements
-var elements2vertices = function(elements, getTextureUV) {
+var elements2vertices = function(elements, getTextureUV, x, y, z) {
   var result = {vertices:[], uv:[]};
 
   for (var i = 0; i < elements.length; i += 1) {
     var element = elements[i];
-    var thisResult = element2vertices(element, getTextureUV);
+    var thisResult = element2vertices(element, getTextureUV, x, y, z);
 
     result.vertices = result.vertices.concat(thisResult.vertices);
     result.uv = result.uv.concat(thisResult.uv);
@@ -141,8 +137,8 @@ var elements2vertices = function(elements, getTextureUV) {
   return result;
 };
 
-var parseBlockModel = function(elements, getTextureUV) {
-  return elements2vertices(elements, getTextureUV);
+var parseBlockModel = function(elements, getTextureUV, x, y, z) {
+  return elements2vertices(elements, getTextureUV, x|0, y|0, z|0);
 };
 
 
