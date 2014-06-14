@@ -132,8 +132,6 @@ var elements2vertices = function(elements, getTextureUV, x, y, z) {
     result.uv = result.uv.concat(thisResult.uv);
   }
 
-  console.log('vertex count:',result.vertices.length);
-
   return result;
 };
 
