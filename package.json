@@ -11,7 +11,6 @@
     "voxel"
   ],
   "dependencies": {
-    "gl-geometry": "0.0.0",
     "glslify": "^1.4.0",
     "gl-buffer": "^2.0.6",
     "gl-vao": "^1.1.2"

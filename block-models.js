@@ -1,6 +1,5 @@
 'use strict';
 
-var createGeometry = require('gl-geometry');
 var createBuffer = require('gl-buffer');
 var createVAO = require('gl-vao');
 
