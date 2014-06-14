@@ -6,8 +6,9 @@ var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
 var glslify       = require('glslify')
 var createTexture = require('gl-texture2d')
-var createBuffer  = require('gl-buffer');
-var createVAO     = require('gl-vao');
+var createBuffer  = require('gl-buffer')
+var createVAO     = require('gl-vao')
+var getPixels     = require('get-pixels')
 
 var parseBlockModel = require('./')
 
@@ -30,7 +31,7 @@ var exampleData =
    // example parsed JSON
   [
     {from: [0,0,0],
-    to: [16,16,16],
+    to: [16,8,16],
     faceData: {
       down: {},
       up: {},
@@ -117,7 +118,14 @@ void main() {\
   gl_FragColor = texture2D(texture, vUv);\
 }"})(gl);
 
-var texture = createTexture(gl, require('lena'))
+// from https://github.com/deathcap/ProgrammerArt/blob/master/textures/blocks/glass_blue.png
+var blueGlass = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIElEQVQ4T2NgYGD4TyEGEf+NycOjBowaMGoAtQ0gHwMAeYYmHC+xF4EAAAAASUVORK5CYII='
+var texture
+getPixels(blueGlass, function(err, pixels) {
+  if (err) throw err
+
+  texture = createTexture(gl, pixels)
+})
 
 function render() {
   var width  = canvas.width
