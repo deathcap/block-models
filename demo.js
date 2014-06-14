@@ -6,8 +6,10 @@ var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
 var glslify       = require('glslify')
 var createTexture = require('gl-texture2d')
+var createBuffer  = require('gl-buffer');
+var createVAO     = require('gl-vao');
 
-var createBlockMesh = require('./')
+var parseBlockModel = require('./')
 
 
 var canvas     = document.body.appendChild(document.createElement('canvas'))
@@ -46,7 +48,27 @@ document.body.appendChild(document.createElement('br'))
 var errorNode = document.createTextNode('')
 document.body.appendChild(errorNode)
 
-var mesh = createBlockMesh(gl, exampleData)
+// create a mesh ready for rendering
+var createBlockMesh = function(gl, vertices, uv, getTextureUV) {
+  var verticesBuf = createBuffer(gl, new Float32Array(vertices))
+  var uvBuf = createBuffer(gl, new Float32Array(uv))
+
+  var mesh = createVAO(gl, [
+      { buffer: verticesBuf,
+        size: 3
+      },
+      {
+        buffer: uvBuf,
+        size: 2
+      }
+      ])
+  mesh.length = vertices.length/3
+
+  return mesh
+};
+
+var model = parseBlockModel(exampleData)
+var mesh = createBlockMesh(gl, model.vertices, model.uv, undefined)
 
 window.setInterval(function() {
   var text = textarea.value

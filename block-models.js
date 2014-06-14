@@ -1,8 +1,5 @@
 'use strict';
 
-var createBuffer = require('gl-buffer');
-var createVAO = require('gl-vao');
-
 // get all coordinates for a cube ranging from vertex a to b
 //   ____
 //  /   /|
@@ -144,26 +141,10 @@ var elements2vertices = function(elements, getTextureUV) {
   return result;
 };
 
-// create a mesh ready for rendering
-var createBlockMesh = function(gl, elements, getTextureUV) {
-  var result = elements2vertices(elements, getTextureUV);
-
-  var verticesBuf = createBuffer(gl, new Float32Array(result.vertices));
-  var uvBuf = createBuffer(gl, new Float32Array(result.uv));
-
-  var mesh = createVAO(gl, [
-      { buffer: verticesBuf,
-        size: 3
-      },
-      {
-        buffer: uvBuf,
-        size: 2
-      }
-      ]);
-  mesh.length = result.vertices.length/3;
-
-  return mesh;
+var parseBlockModel = function(elements, getTextureUV) {
+  return elements2vertices(elements, getTextureUV);
 };
 
-module.exports = createBlockMesh;
+
+module.exports = parseBlockModel;
 
