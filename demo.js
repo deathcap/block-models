@@ -78,7 +78,8 @@ window.setInterval(function() {
   errorNode.textContent = ''
   try {
     var data = JSON.parse(text)
-    mesh = createBlockMesh(gl, data)
+    var model = parseBlockModel(data)
+    mesh = createBlockMesh(gl, model.vertices, model.uv)
     console.log('updated geometry',mesh)
   } catch (e) {
     errorNode.textContent = e.toString()
