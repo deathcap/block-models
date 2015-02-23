@@ -18,7 +18,7 @@
   "dependencies": {},
   "license": "MIT",
   "devDependencies": {
-    "glslify": "^1.4.0",
+    "glslify": "^1.6.0",
     "gl-buffer": "^2.0.6",
     "gl-vao": "^1.1.2",
     "canvas-orbit-camera": "0.0.0",
