@@ -4,6 +4,7 @@
 var createCamera  = require('canvas-orbit-camera')
 var mat4          = require('gl-matrix').mat4
 var createContext = require('gl-context')
+var glShader      = require('gl-shader')
 var glslify       = require('glslify')
 var createTexture = require('gl-texture2d')
 var createBuffer  = require('gl-buffer')
@@ -92,9 +93,8 @@ var modelMatrix = mat4.create()
 var s = 5
 mat4.scale(modelMatrix, modelMatrix, [s,s,s])
 
-var shader = glslify({ // TODO: move into main?
-    inline: true,
-    vertex: "\
+var shader = glShader(gl,
+  glslify("\
 attribute vec3 position;\
 attribute vec2 uv;\
 \
@@ -106,9 +106,9 @@ varying vec2 vUv;\
 void main() {\
   gl_Position = projection * view * model * vec4(position, 1.0);\
   vUv = uv;\
-}",
+}", {inline: true}),
 
-  fragment: "\
+  glslify("\
 precision highp float;\
 \
 uniform sampler2D texture;\
@@ -116,7 +116,7 @@ varying vec2 vUv;\
 \
 void main() {\
   gl_FragColor = texture2D(texture, vUv);\
-}"})(gl);
+}", {inline: true}));
 
 // from https://github.com/deathcap/ProgrammerArt/blob/master/textures/blocks/glass_blue.png
 var blueGlass = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIElEQVQ4T2NgYGD4TyEGEf+NycOjBowaMGoAtQ0gHwMAeYYmHC+xF4EAAAAASUVORK5CYII='
