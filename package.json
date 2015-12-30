@@ -2,7 +2,7 @@
   "name": "block-models",
   "description": "custom non-cube block models for voxel.js",
   "main": "block-models.js",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "repository": {
     "type": "git",
     "url": "git@github.com:deathcap/block-models.git"
@@ -18,16 +18,18 @@
   "dependencies": {},
   "license": "MIT",
   "devDependencies": {
-    "glslify": "^1.4.0",
-    "gl-buffer": "^2.0.6",
-    "gl-vao": "^1.1.2",
     "canvas-orbit-camera": "0.0.0",
-    "gl-matrix": "^2.2.1",
+    "get-pixels": "^1.1.0",
+    "gl-buffer": "^2.0.6",
     "gl-context": "^0.1.0",
+    "gl-matrix": "^2.2.1",
+    "gl-shader": "^4.1.1",
     "gl-texture2d": "^1.0.1",
-    "get-pixels": "^1.1.0"
+    "gl-vao": "^1.1.2",
+    "glslify": "^5.0.0",
+    "wzrd": "^1.3.1"
   },
   "scripts": {
-    "start": "beefy demo.js -- -t glslify"
+    "start": "wzrd demo.js -- -t glslify"
   }
 }
